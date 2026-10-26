@@ -305,5 +305,175 @@
   });
 </script>
 
+<hr style="margin:40px 0 25px">
+
+<section style="max-width:420px;margin:auto">
+  <h2>Aufnahme einsenden</h2>
+
+  <p>
+    Dies ist zunächst ein technischer Test.
+    Bitte keine persönlichen oder
+    vertraulichen Inhalte aufnehmen.
+  </p>
+
+  <label style="display:block;margin:20px 0">
+    <input type="checkbox" id="testConsent">
+    Ich stimme der Speicherung meiner
+    Testaufnahme im Projektarchiv zu.
+  </label>
+
+  <button id="uploadAudio" type="button" disabled>
+    Testaufnahme absenden
+  </button>
+
+  <p id="uploadStatus" role="status"></p>
+</section>
+
+<iframe
+  name="audioUploadFrame"
+  id="audioUploadFrame"
+  style="display:none">
+</iframe>
+
+<form
+  id="audioUploadForm"
+  action="https://script.google.com/macros/s/AKfycbwpz5RC7C_LFiH3TJRbKnrHorQp8IevXJP3NFVF3ojr80GJNa7vK6JmptIDXv2zNKRT/exec"
+  method="POST"
+  target="audioUploadFrame"
+  style="display:none">
+
+  <input type="hidden" name="audioBase64">
+  <input type="hidden" name="mimeType">
+  <input type="hidden" name="duration">
+  <input type="hidden" name="name" value="">
+  <input type="hidden" name="email" value="">
+  <input type="hidden" name="artConsent" value="true">
+  <input type="hidden" name="contactConsent" value="false">
+  <input type="hidden" name="updatesConsent" value="false">
+</form>
+
+<script>
+  const uploadButton =
+    document.getElementById('uploadAudio');
+
+  const uploadStatus =
+    document.getElementById('uploadStatus');
+
+  const testConsent =
+    document.getElementById('testConsent');
+
+  const uploadForm =
+    document.getElementById('audioUploadForm');
+
+  let uploadBusy = false;
+
+  function updateUploadButton() {
+    uploadButton.disabled =
+      uploadBusy ||
+      recording ||
+      !testConsent.checked ||
+      !recorder ||
+      !chunks.length ||
+      recorder.state !== 'inactive';
+  }
+
+  testConsent.addEventListener(
+    'change',
+    updateUploadButton
+  );
+
+  // Aufnahmestatus regelmäßig prüfen
+  setInterval(updateUploadButton, 300);
+
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(
+          String(reader.result).split(',')[1]
+        );
+      };
+
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  uploadButton.addEventListener(
+    'click',
+    async () => {
+      if (uploadButton.disabled) return;
+
+      uploadBusy = true;
+      updateUploadButton();
+
+      try {
+        const blob = new Blob(chunks, {
+          type: recorder.mimeType
+        });
+
+        // Nur kleine Dateien für diesen Test
+        if (blob.size > 1024 * 1024) {
+          throw new Error(
+            'Für diesen Test bitte nur ' +
+            'eine kurze Aufnahme machen.'
+          );
+        }
+
+        const mimeType =
+          blob.type.split(';')[0];
+
+        if (![
+          'audio/webm',
+          'audio/mp4',
+          'audio/ogg'
+        ].includes(mimeType)) {
+          throw new Error(
+            'Audioformat nicht unterstützt: ' +
+            mimeType
+          );
+        }
+
+        const base64 =
+          await blobToBase64(blob);
+
+        const durationSeconds =
+          Math.min(
+            300,
+            (Date.now() - startedAt) / 1000
+          );
+
+        uploadForm.elements[
+          'audioBase64'
+        ].value = base64;
+
+        uploadForm.elements[
+          'mimeType'
+        ].value = mimeType;
+
+        uploadForm.elements[
+          'duration'
+        ].value = String(durationSeconds);
+
+        uploadStatus.textContent =
+          'Anfrage wird an Google gesendet. ' +
+          'Bitte anschließend Drive und ' +
+          'Sheets kontrollieren.';
+
+        uploadForm.submit();
+
+      } catch (error) {
+        uploadStatus.textContent =
+          'Fehler: ' + error.message;
+
+      } finally {
+        uploadBusy = false;
+        updateUploadButton();
+      }
+    }
+  );
+</script>
+
 </body>
 </html>
