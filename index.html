@@ -8,6 +8,25 @@
   <title>Deine Stimme zählt.</title>
 
   <style>
+
+    
+.field-error {
+  color: #b64a42;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 7px 0 0;
+}
+
+.field input.invalid {
+  border: 2px solid #b64a42;
+  background: #fff8f7;
+}
+
+.field input:focus {
+  outline-offset: 3px;
+}
+
+    
     * { box-sizing: border-box; }
 
     body {
@@ -262,9 +281,17 @@
 
       <div class="field">
         <label for="email">E-Mail-Adresse</label>
-        <input id="email" type="email"
-               maxlength="254"
-               autocomplete="email">
+       
+<input id="email" type="email"
+       maxlength="254"
+       autocomplete="email"
+       aria-describedby="emailError">
+
+<p id="emailError"
+   class="field-error"
+   role="alert"
+   hidden></p>
+
       </div>
 
       <p class="hint">
@@ -665,6 +692,45 @@
     'change', updateButtons
   );
 
+  
+  
+function showEmailError(text) {
+  const field = $('email');
+  const error = $('emailError');
+
+  error.textContent = text;
+  error.hidden = false;
+
+  field.classList.add('invalid');
+  field.setAttribute('aria-invalid', 'true');
+
+  field.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+
+  setTimeout(() => {
+    field.focus({ preventScroll: true });
+  }, 300);
+}
+
+function clearEmailError() {
+  const field = $('email');
+  const error = $('emailError');
+
+  error.textContent = '';
+  error.hidden = true;
+
+  field.classList.remove('invalid');
+  field.removeAttribute('aria-invalid');
+}
+
+$('email').addEventListener(
+  'input',
+  clearEmailError
+);
+
+  
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -700,24 +766,27 @@
       ? $('name').value.trim()
       : '';
 
-    if ((wantsQuestions || wantsUpdates) &&
-        !email) {
-      showMessage(
-        'Bitte gib für die Kontaktaufnahme ' +
-        'deine E-Mail-Adresse ein.',
-        'error'
-      );
-      return;
-    }
+    
+if ((wantsQuestions || wantsUpdates) &&
+    !email) {
+  showEmailError(
+    'Bitte gib deine E-Mail-Adresse ein.'
+  );
+  return;
+}
 
-    if (email &&
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showMessage(
-        'Bitte überprüfe deine E-Mail-Adresse.',
-        'error'
-      );
-      return;
-    }
+
+    
+if (email &&
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  showEmailError(
+    'Bitte gib eine gültige E-Mail-Adresse ein.'
+  );
+  return;
+}
+
+clearEmailError();
+
 
     const mimeType =
       audioBlob.type.split(';')[0];
