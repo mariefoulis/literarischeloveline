@@ -250,10 +250,6 @@ hr {
       Tippe auf das Mikrofon, um aufzunehmen.
     </div>
 
-    <button id="mode" type="button">
-      Lieber gedrückt halten?
-    </button>
-
     <audio id="player" controls hidden></audio>
 
     <div class="actions">
@@ -372,8 +368,7 @@ hr {
 
   const MAX_SECONDS = 300;
   const MAX_BYTES = 20 * 1024 * 1024;
-
-  let mode = 'tap';
+  
   let recorder = null;
   let stream = null;
   let chunks = [];
@@ -384,7 +379,6 @@ hr {
   let starting = false;
   let busy = false;
   let submitted = false;
-  let holding = false;
   let stopAfterStart = false;
 
   let startedAt = 0;
@@ -427,9 +421,6 @@ hr {
       starting || !audioBlob ||
       !$('artConsent').checked;
 
-    $('mode').disabled =
-      busy || submitted || recording ||
-      starting;
   }
 
   function closeStream() {
@@ -483,13 +474,6 @@ hr {
         await navigator.mediaDevices.getUserMedia({
           audio: true
         });
-
-      if (mode === 'hold' && !holding) {
-        closeStream();
-        status.textContent =
-          'Bitte erneut gedrückt halten.';
-        return;
-      }
 
       const types = [
         'audio/webm;codecs=opus',
@@ -618,51 +602,17 @@ hr {
     updateButtons();
   }
 
-  mic.addEventListener('click', () => {
-    if (mode !== 'tap' || mic.disabled) return;
 
-    if (recording || starting) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  });
+mic.addEventListener('click', () => {
+  if (mic.disabled) return;
 
-  mic.addEventListener('pointerdown', event => {
-    if (mode !== 'hold' || mic.disabled) return;
-
-    event.preventDefault();
-    holding = true;
-
+  if (recording || starting) {
+    stopRecording();
+  } else {
     startRecording();
-  });
-
-  function releaseMic() {
-    if (mode !== 'hold') return;
-
-    holding = false;
-
-    if (recording || starting) {
-      stopRecording();
-    }
   }
+});
 
-  window.addEventListener('pointerup', releaseMic);
-  window.addEventListener('pointercancel', releaseMic);
-
-  $('mode').addEventListener('click', () => {
-    mode = mode === 'tap' ? 'hold' : 'tap';
-
-    $('mode').textContent =
-      mode === 'tap'
-        ? 'Lieber gedrückt halten?'
-        : 'Lieber durch Tippen aufnehmen?';
-
-    status.textContent =
-      mode === 'tap'
-        ? 'Tippe zum Starten und Stoppen.'
-        : 'Halte das Mikrofon gedrückt.';
-  });
 
   $('reset').addEventListener('click', () => {
     if (busy || submitted) return;
