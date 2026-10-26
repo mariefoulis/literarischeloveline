@@ -7,27 +7,23 @@
         content="width=device-width, initial-scale=1">
   <title>Deine Stimme zählt.</title>
 
-  
   <style>
+    .field-error {
+      color: #b64a42;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 7px 0 0;
+    }
 
-    
-.field-error {
-  color: #b64a42;
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 7px 0 0;
-}
+    .field input.invalid {
+      border: 2px solid #b64a42;
+      background: #fff8f7;
+    }
 
-.field input.invalid {
-  border: 2px solid #b64a42;
-  background: #fff8f7;
-}
+    .field input:focus {
+      outline-offset: 3px;
+    }
 
-.field input:focus {
-  outline-offset: 3px;
-}
-
-    
     * { box-sizing: border-box; }
 
     body {
@@ -153,12 +149,11 @@
       cursor: not-allowed;
     }
 
-    
-hr {
-  border: 0;
-  border-top: 1px solid #d8d5d0;
-  margin: 16px 0;
-}
+    hr {
+      border: 0;
+      border-top: 1px solid #d8d5d0;
+      margin: 16px 0;
+    }
 
     .field {
       margin: 19px 0;
@@ -213,61 +208,69 @@ hr {
     .error { color: #b64a42; }
     .notice { color: #555; }
 
+    .check a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
 
-.check a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
+    .privacy-overlay[hidden] {
+      display: none;
+    }
 
+    .privacy-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
 
-.privacy-overlay[hidden] {
-  display: none;
-}
+    .privacy-window {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      height: 88dvh;
+      background: #f5f3ef;
+      border-radius: 12px;
+      overflow: hidden;
+    }
 
-.privacy-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-}
+    .privacy-window iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
 
-.privacy-window {
-  position: relative;
-  width: 100%;
-  max-width: 680px;
-  height: 88dvh;
-  background: #f5f3ef;
-  border-radius: 12px;
-  overflow: hidden;
-}
+    .privacy-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      z-index: 2;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: #e5e2dc;
+      color: #242424;
+      font-size: 26px;
+      cursor: pointer;
+    }
 
-.privacy-window iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.privacy-close {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  z-index: 2;
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  background: #e5e2dc;
-  color: #242424;
-  font-size: 26px;
-  cursor: pointer;
-}
-
-    
+    #message.thank-you {
+      margin: 34px auto 0;
+      max-width: 430px;
+      padding: 20px 8px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.65;
+      white-space: pre-line;
+      color: #252525;
+    }
   </style>
 </head>
 
@@ -310,88 +313,83 @@ hr {
     </div>
   </section>
 
-<hr>
-
-  
-
-
-<label class="check">
-  <input type="checkbox" id="artConsent">
-  <span>
-    Ich habe die
-    <a href="datenschutz.html" id="openPrivacy">Projekt- und Datenschutzinformationen</a>
-    gelesen und stimme der Speicherung meiner
-    Sprachaufnahme sowie ihrer künstlerischen
-    Verwendung im Rahmen des Projekts zu.
-  </span>
-</label>
-
-<hr>
-
-<p><strong>Optional</strong></p>
-
-<label class="check">
-  <input type="checkbox" id="socialConsent">
-  <span>
-    Kurze Ausschnitte meiner Sprachaufnahme dürfen
-    auf dem Instagram-Profil der Schreibwerkstatt Köln
-    veröffentlicht werden.
-  </span>
-</label>
-
-
-  <section>
+  <div id="consentArea">
+    <hr>
 
     <label class="check">
-      <input type="checkbox" id="addContact">
-      <span>Ich möchte Kontaktdaten hinterlassen.</span>
+      <input type="checkbox" id="artConsent">
+      <span>
+        Ich habe die
+        <a href="datenschutz.html" id="openPrivacy">Projekt- und Datenschutzinformationen</a>
+        gelesen und stimme der Speicherung meiner
+        Sprachaufnahme sowie ihrer künstlerischen
+        Verwendung im Rahmen des Projekts zu.
+      </span>
     </label>
 
-    <div id="contactFields" hidden>
+    <hr>
 
-      <div class="field">
-        <label for="name">Name (optional)</label>
-        <input id="name" maxlength="100"
-               autocomplete="name">
-      </div>
+    <p><strong>Optional</strong></p>
 
-      <div class="field">
-        <label for="email">E-Mail-Adresse</label>
-       
-<input id="email" type="email"
-       maxlength="254"
-       autocomplete="email"
-       aria-describedby="emailError">
+    <label class="check">
+      <input type="checkbox" id="socialConsent">
+      <span>
+        Kurze Ausschnitte meiner Sprachaufnahme dürfen
+        auf dem Instagram-Profil der Schreibwerkstatt Köln
+        veröffentlicht werden.
+      </span>
+    </label>
 
-<p id="emailError"
-   class="field-error"
-   role="alert"
-   hidden></p>
-
-      </div>
-
-      <p class="hint">
-        Bitte wähle, wofür wir dich
-        kontaktieren dürfen:
-      </p>
-
+    <section>
       <label class="check">
-        <input type="checkbox" id="contactConsent">
-        <span>
-          Ich darf bei Rückfragen zu meiner
-          Aufnahme per E-Mail kontaktiert werden.
-        </span>
+        <input type="checkbox" id="addContact">
+        <span>Ich möchte Kontaktdaten hinterlassen.</span>
       </label>
 
-      <label class="check">
-        <input type="checkbox" id="updatesConsent">
-        <span>
-          Ich möchte Informationen über das Projekt und zukünftige Veranstaltungstermine erhalten.
-        </span>
-      </label>
+      <div id="contactFields" hidden>
 
-    </div>
-  </section>
+        <div class="field">
+          <label for="name">Name (optional)</label>
+          <input id="name" maxlength="100"
+                 autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="email">E-Mail-Adresse</label>
+          <input id="email" type="email"
+                 maxlength="254"
+                 autocomplete="email"
+                 aria-describedby="emailError">
+
+          <p id="emailError"
+             class="field-error"
+             role="alert"
+             hidden></p>
+        </div>
+
+        <p class="hint">
+          Bitte wähle, wofür wir dich
+          kontaktieren dürfen:
+        </p>
+
+        <label class="check">
+          <input type="checkbox" id="contactConsent">
+          <span>
+            Ich darf bei Rückfragen zu meiner
+            Aufnahme per E-Mail kontaktiert werden.
+          </span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="updatesConsent">
+          <span>
+            Ich möchte Informationen über das Projekt und zukünftige Veranstaltungstermine erhalten.
+          </span>
+        </label>
+
+      </div>
+    </section>
+  </div>
 
   <p id="message" role="status"></p>
 
@@ -437,13 +435,13 @@ hr {
 
   </div>
 </div>
-  
+
 <script>
   const $ = id => document.getElementById(id);
 
   const MAX_SECONDS = 300;
   const MAX_BYTES = 20 * 1024 * 1024;
-  
+
   let recorder = null;
   let stream = null;
   let chunks = [];
@@ -495,7 +493,6 @@ hr {
       busy || submitted || recording ||
       starting || !audioBlob ||
       !$('artConsent').checked;
-
   }
 
   function closeStream() {
@@ -677,17 +674,15 @@ hr {
     updateButtons();
   }
 
+  mic.addEventListener('click', () => {
+    if (mic.disabled) return;
 
-mic.addEventListener('click', () => {
-  if (mic.disabled) return;
-
-  if (recording || starting) {
-    stopRecording();
-  } else {
-    startRecording();
-  }
-});
-
+    if (recording || starting) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  });
 
   $('reset').addEventListener('click', () => {
     if (busy || submitted) return;
@@ -718,45 +713,42 @@ mic.addEventListener('click', () => {
     'change', updateButtons
   );
 
-  
-  
-function showEmailError(text) {
-  const field = $('email');
-  const error = $('emailError');
+  function showEmailError(text) {
+    const field = $('email');
+    const error = $('emailError');
 
-  error.textContent = text;
-  error.hidden = false;
+    error.textContent = text;
+    error.hidden = false;
 
-  field.classList.add('invalid');
-  field.setAttribute('aria-invalid', 'true');
+    field.classList.add('invalid');
+    field.setAttribute('aria-invalid', 'true');
 
-  field.scrollIntoView({
-    behavior: 'smooth',
-    block: 'center'
-  });
+    field.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
 
-  setTimeout(() => {
-    field.focus({ preventScroll: true });
-  }, 300);
-}
+    setTimeout(() => {
+      field.focus({ preventScroll: true });
+    }, 300);
+  }
 
-function clearEmailError() {
-  const field = $('email');
-  const error = $('emailError');
+  function clearEmailError() {
+    const field = $('email');
+    const error = $('emailError');
 
-  error.textContent = '';
-  error.hidden = true;
+    error.textContent = '';
+    error.hidden = true;
 
-  field.classList.remove('invalid');
-  field.removeAttribute('aria-invalid');
-}
+    field.classList.remove('invalid');
+    field.removeAttribute('aria-invalid');
+  }
 
-$('email').addEventListener(
-  'input',
-  clearEmailError
-);
+  $('email').addEventListener(
+    'input',
+    clearEmailError
+  );
 
-  
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -792,27 +784,23 @@ $('email').addEventListener(
       ? $('name').value.trim()
       : '';
 
-    
-if ((wantsQuestions || wantsUpdates) &&
-    !email) {
-  showEmailError(
-    'Bitte gib deine E-Mail-Adresse ein.'
-  );
-  return;
-}
+    if ((wantsQuestions || wantsUpdates) &&
+        !email) {
+      showEmailError(
+        'Bitte gib deine E-Mail-Adresse ein.'
+      );
+      return;
+    }
 
+    if (email &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showEmailError(
+        'Bitte gib eine gültige E-Mail-Adresse ein.'
+      );
+      return;
+    }
 
-    
-if (email &&
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-  showEmailError(
-    'Bitte gib eine gültige E-Mail-Adresse ein.'
-  );
-  return;
-}
-
-clearEmailError();
-
+    clearEmailError();
 
     const mimeType =
       audioBlob.type.split(';')[0];
@@ -857,7 +845,7 @@ clearEmailError();
         'true';
 
       form.elements['socialConsent'].value =
-  String($('socialConsent').checked);
+        String($('socialConsent').checked);
 
       form.elements['contactConsent'].value =
         String(wantsQuestions);
@@ -871,11 +859,13 @@ clearEmailError();
       // solange der Status unbekannt ist.
       submitted = true;
 
+      $('consentArea').hidden = true;
+
       showMessage(
-  'Vielen Dank für deine Einreichung!\n' +
-  'Deine Aufnahme wurde übermittelt.',
-  'notice'
-);
+        'Vielen Dank für deine Einreichung!\n' +
+        'Deine Aufnahme wurde übermittelt.',
+        'thank-you'
+      );
 
       status.textContent =
         'Übertragung gestartet.';
@@ -892,35 +882,32 @@ clearEmailError();
     }
   });
 
-  
-const privacyPopup =
-  document.getElementById('privacyPopup');
+  const privacyPopup =
+    document.getElementById('privacyPopup');
 
-const openPrivacy =
-  document.getElementById('openPrivacy');
+  const openPrivacy =
+    document.getElementById('openPrivacy');
 
-const closePrivacy =
-  document.getElementById('closePrivacy');
+  const closePrivacy =
+    document.getElementById('closePrivacy');
 
-openPrivacy.addEventListener('click', function(event) {
-  event.preventDefault();
-  privacyPopup.hidden = false;
-});
+  openPrivacy.addEventListener('click', function(event) {
+    event.preventDefault();
+    privacyPopup.hidden = false;
+  });
 
-closePrivacy.addEventListener('click', function() {
-  privacyPopup.hidden = true;
-});
-
-privacyPopup.addEventListener('click', function(event) {
-  if (event.target === privacyPopup) {
+  closePrivacy.addEventListener('click', function() {
     privacyPopup.hidden = true;
-  }
-});
+  });
 
-  
+  privacyPopup.addEventListener('click', function(event) {
+    if (event.target === privacyPopup) {
+      privacyPopup.hidden = true;
+    }
+  });
+
   updateButtons();
 </script>
-
 
 </body>
 </html>
