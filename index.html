@@ -243,5 +243,67 @@
       'Tippe auf das Mikrofon, um neu aufzunehmen.';
   });
 </script>
+  
+<hr style="margin-top:40px">
+
+<button id="connectionTest" type="button">
+  Verbindung zu Google testen
+</button>
+
+<p id="connectionResult"></p>
+
+<iframe
+  name="googleTestFrame"
+  id="googleTestFrame"
+  style="display:none">
+</iframe>
+
+<form
+  id="googleTestForm"
+  action="https://script.google.com/macros/s/AKfycbwpz5RC7C_LFiH3TJRbKnrHorQp8IevXJP3NFVF3ojr80GJNa7vK6JmptIDXv2zNKRT/exec"
+  method="POST"
+  target="googleTestFrame"
+  style="display:none">
+
+  <input
+    type="hidden"
+    name="test"
+    value="stimmenarchiv-test">
+</form>
+
+<script>
+  const testButton =
+    document.getElementById('connectionTest');
+
+  const testResult =
+    document.getElementById('connectionResult');
+
+  const testForm =
+    document.getElementById('googleTestForm');
+
+  const testFrame =
+    document.getElementById('googleTestFrame');
+
+  let testStarted = false;
+
+  testButton.addEventListener('click', () => {
+    testStarted = true;
+
+    testResult.textContent =
+      'Testanfrage wird gesendet …';
+
+    testForm.submit();
+  });
+
+  testFrame.addEventListener('load', () => {
+    if (!testStarted) return;
+
+    testResult.textContent =
+      'Die Anfrage wurde abgeschickt. ' +
+      'Ob Google sie verarbeitet hat, ' +
+      'prüfen wir im Apps-Script-Protokoll.';
+  });
+</script>
+
 </body>
 </html>
