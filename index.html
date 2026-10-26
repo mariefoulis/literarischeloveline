@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deine Stimme zählt</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 50px 20px;
+      background: #f5f3ef;
+      color: #242424;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    main {
+      max-width: 420px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 500;
+    }
+
+    p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 16px 25px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #mic {
+      width: 110px;
+      height: 110px;
+      margin: 30px auto 15px;
+      border-radius: 50%;
+      background: #242424;
+      color: white;
+      font-size: 42px;
+      touch-action: manipulation;
+    }
+
+    #mic.recording {
+      background: #b64a42;
+    }
+
+    #timer {
+      font-size: 20px;
+      margin: 15px 0;
+    }
+
+    #status {
+      font-size: 14px;
+      min-height: 45px;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    #reset {
+      margin-top: 20px;
+      background: #e4e0d9;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+<main>
+  <h1>Deine Stimme zählt.</h1>
+
+  <p>
+    Hinterlasse eine Sprachnachricht
+    für unser Kunstprojekt.<br>
+    Du hast bis zu fünf Minuten Zeit.
+  </p>
+
+  <button id="mic" type="button">🎙</button>
+
+  <div id="timer">00:00 / 05:00</div>
+
+  <p id="status">
+    Tippe auf das Mikrofon, um zu starten.
+  </p>
+
+  <audio id="player" controls hidden></audio>
+
+  <div>
+    <button id="reset" hidden>
+      Neu aufnehmen
+    </button>
+  </div>
+</main>
+
+<script>
+  const mic = document.getElementById('mic');
+  const timer = document.getElementById('timer');
+  const statusText = document.getElementById('status');
+  const player = document.getElementById('player');
+  const reset = document.getElementById('reset');
+
+  let recorder;
+  let stream;
+  let chunks = [];
+  let recording = false;
+  let startedAt;
+  let interval;
+  let timeout;
+  let audioUrl;
+
+  function formatTime(seconds) {
+    const s = Math.floor(seconds);
+
+    return String(Math.floor(s / 60)).padStart(2, '0')
+      + ':' + String(s % 60).padStart(2, '0');
+  }
+
+  async function startRecording() {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia ||
+          !window.MediaRecorder) {
+        throw new Error(
+          'Dieser Browser unterstützt keine Audioaufnahme.'
+        );
+      }
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: true
+      });
+
+      chunks = [];
+
+      recorder = new MediaRecorder(stream);
+
+      recorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        clearInterval(interval);
+        clearTimeout(timeout);
+
+        stream.getTracks().forEach(track => track.stop());
+
+        const blob = new Blob(chunks, {
+          type: recorder.mimeType
+        });
+
+        if (audioUrl) {
+          URL.revokeObjectURL(audioUrl);
+        }
+
+        audioUrl = URL.createObjectURL(blob);
+
+        player.src = audioUrl;
+        player.hidden = false;
+        reset.hidden = false;
+
+        statusText.textContent =
+          'Aufnahme fertig! Du kannst sie anhören.';
+      };
+
+      recorder.start();
+
+      startedAt = Date.now();
+      recording = true;
+
+      mic.classList.add('recording');
+      mic.textContent = '■';
+
+      statusText.textContent =
+        'Aufnahme läuft. Tippe zum Stoppen.';
+
+      interval = setInterval(() => {
+        const seconds = Math.min(
+          300,
+          (Date.now() - startedAt) / 1000
+        );
+
+        timer.textContent =
+          formatTime(seconds) + ' / 05:00';
+      }, 200);
+
+      timeout = setTimeout(stopRecording, 300000);
+
+    } catch (error) {
+      statusText.textContent =
+        'Fehler: ' + error.message;
+
+      console.error(error);
+    }
+  }
+
+  function stopRecording() {
+    if (!recording) return;
+
+    recording = false;
+
+    recorder.stop();
+
+    mic.classList.remove('recording');
+    mic.textContent = '🎙';
+  }
+
+  mic.addEventListener('click', () => {
+    if (recording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  });
+
+  reset.addEventListener('click', () => {
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+    }
+
+    player.pause();
+    player.removeAttribute('src');
+    player.hidden = true;
+    reset.hidden = true;
+
+    timer.textContent = '00:00 / 05:00';
+
+    statusText.textContent =
+      'Tippe auf das Mikrofon, um neu aufzunehmen.';
+  });
+</script>
+</body>
+</html>
