@@ -419,6 +419,25 @@ hr {
   <input type="hidden" name="updatesConsent">
 </form>
 
+<div id="privacyPopup" class="privacy-overlay" hidden>
+  <div class="privacy-window"
+       role="dialog"
+       aria-modal="true"
+       aria-label="Projekt- und Datenschutzinformationen">
+
+    <button type="button"
+            id="closePrivacy"
+            class="privacy-close"
+            aria-label="Schließen">×</button>
+
+    <iframe
+      src="datenschutz.html"
+      title="Projekt- und Datenschutzinformationen">
+    </iframe>
+
+  </div>
+</div>
+  
 <script>
   const $ = id => document.getElementById(id);
 
@@ -904,24 +923,6 @@ privacyPopup.addEventListener('click', function(event) {
   updateButtons();
 </script>
 
-<div id="privacyPopup" class="privacy-overlay" hidden>
-  <div class="privacy-window"
-       role="dialog"
-       aria-modal="true"
-       aria-label="Projekt- und Datenschutzinformationen">
-
-    <button type="button"
-            id="closePrivacy"
-            class="privacy-close"
-            aria-label="Schließen">×</button>
-
-    <iframe
-      src="datenschutz.html"
-      title="Projekt- und Datenschutzinformationen">
-    </iframe>
-
-  </div>
-</div>
 
 </body>
 </html>
