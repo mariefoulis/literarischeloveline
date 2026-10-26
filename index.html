@@ -921,44 +921,6 @@ privacyPopup.addEventListener('click', function(event) {
 
   
   updateButtons();
-
-// Rückmeldung von Google Apps Script empfangen
-window.addEventListener('message', function(event) {
-
-  // Nur Nachrichten von Google akzeptieren
-  if (
-    event.origin !== 'https://script.google.com' &&
-    event.origin !== 'https://script.googleusercontent.com'
-  ) return;
-
-  // Nur Nachrichten aus unserem Upload-Fenster
-  if (event.source !== $('uploadFrame').contentWindow) return;
-
-  // Nur unsere Upload-Rückmeldung verarbeiten
-  if (
-    !event.data ||
-    event.data.type !== 'stimmenarchiv-upload'
-  ) return;
-
-  if (event.data.success === true) {
-    showMessage(
-      'Vielen Dank für deine Einreichung! ' +
-      'Deine Aufnahme wurde erfolgreich gespeichert.',
-      'success'
-    );
-
-    status.textContent = 'Erfolgreich gespeichert.';
-
-  } else if (event.data.success === false) {
-    showMessage(
-      'Die Aufnahme konnte nicht gespeichert werden: ' +
-      (event.data.error || 'Unbekannter Fehler.'),
-      'error'
-    );
-
-    status.textContent = 'Fehler beim Speichern.';
-  }
-});
   
 </script>
 
