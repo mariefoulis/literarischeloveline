@@ -266,6 +266,7 @@ hr {
 <hr>
 
   
+
 <label class="check">
   <input type="checkbox" id="artConsent">
   <span>
@@ -275,11 +276,23 @@ hr {
        rel="noopener noreferrer">
       Projekt- und Datenschutzinformationen
     </a>
-    gelesen und stimme der dort beschriebenen
-    Speicherung und künstlerischen Verwendung
-    meiner Sprachaufnahme zu.
+    gelesen und stimme der Speicherung meiner
+    Sprachaufnahme sowie ihrer künstlerischen
+    Verwendung bei öffentlichen Lesungen des
+    Projekts zu.
   </span>
 </label>
+
+<label class="check">
+  <input type="checkbox" id="socialConsent">
+  <span>
+    Optional: Ich bin damit einverstanden, dass
+    kurze Ausschnitte meiner Sprachaufnahme
+    (wenige Sekunden) auf den Social-Media-Kanälen
+    der Schreibwerkstatt Köln veröffentlicht werden.
+  </span>
+</label>
+
   
   <hr>
 
@@ -359,6 +372,7 @@ hr {
   <input type="hidden" name="name">
   <input type="hidden" name="email">
   <input type="hidden" name="artConsent">
+  <input type="hidden" name="socialConsent">
   <input type="hidden" name="contactConsent">
   <input type="hidden" name="updatesConsent">
 </form>
@@ -780,6 +794,9 @@ clearEmailError();
 
       form.elements['artConsent'].value =
         'true';
+
+      form.elements['socialConsent'].value =
+  String($('socialConsent').checked);
 
       form.elements['contactConsent'].value =
         String(wantsQuestions);
