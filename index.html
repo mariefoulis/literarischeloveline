@@ -3,387 +3,667 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Deine Stimme zählt</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <title>Deine Stimme zählt.</title>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      padding: 50px 20px;
+      padding: 42px 22px 70px;
       background: #f5f3ef;
-      color: #242424;
+      color: #252525;
       font-family: Arial, sans-serif;
-      text-align: center;
     }
 
     main {
-      max-width: 420px;
+      max-width: 430px;
       margin: auto;
     }
 
+    header, .recorder {
+      text-align: center;
+    }
+
     h1 {
-      font-size: 34px;
+      font-size: 35px;
       font-weight: 500;
+      letter-spacing: -1px;
+      margin: 15px 0 20px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 12px;
     }
 
     p {
-      color: #666;
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 16px 25px;
-      font-size: 16px;
-      cursor: pointer;
+    .intro, .hint {
+      color: #707070;
+      font-size: 14px;
     }
+
+    .intro { margin-bottom: 40px; }
 
     #mic {
-      width: 110px;
-      height: 110px;
-      margin: 30px auto 15px;
+      width: 116px;
+      height: 116px;
+      border: 0;
       border-radius: 50%;
-      background: #242424;
+      background: #252525;
       color: white;
-      font-size: 42px;
-      touch-action: manipulation;
+      font-size: 43px;
+      cursor: pointer;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     #mic.recording {
       background: #b64a42;
     }
 
+    #mic:disabled {
+      opacity: .45;
+    }
+
     #timer {
-      font-size: 20px;
-      margin: 15px 0;
+      margin: 22px 0 12px;
+      font-size: 21px;
+      font-variant-numeric: tabular-nums;
     }
 
     #status {
-      font-size: 14px;
-      min-height: 45px;
+      min-height: 42px;
+      font-size: 13px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    #mode {
+      margin: 10px 0 22px;
+      border: none;
+      background: none;
+      color: #666;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 13px;
     }
 
     audio {
+      display: block;
       width: 100%;
-      margin-top: 20px;
-    }
-
-    #reset {
-      margin-top: 20px;
-      background: #e4e0d9;
+      margin: 20px 0;
     }
 
     [hidden] {
       display: none !important;
     }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 15px 10px;
+      border-radius: 9px;
+      border: 1px solid #c8c5c0;
+      background: transparent;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    #send {
+      background: #252525;
+      color: white;
+      border-color: #252525;
+    }
+
+    button:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #dcd8d2;
+      margin: 38px 0 28px;
+    }
+
+    .field {
+      margin: 19px 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccc7c0;
+      border-radius: 8px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 19px 0;
+    }
+
+    .check input {
+      flex-shrink: 0;
+      width: 19px;
+      height: 19px;
+      margin: 0;
+      accent-color: #252525;
+    }
+
+    .privacy {
+      color: #777;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .privacy a { color: inherit; }
+
+    #message {
+      margin-top: 24px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .error { color: #b64a42; }
+    .notice { color: #555; }
   </style>
 </head>
 
 <body>
 <main>
-  <h1>Deine Stimme zählt.</h1>
 
-  <p>
-    Hinterlasse eine Sprachnachricht
-    für unser Kunstprojekt.<br>
-    Du hast bis zu fünf Minuten Zeit.
-  </p>
+  <header>
+    <h1>Deine Stimme zählt.</h1>
 
-  <button id="mic" type="button">🎙</button>
+    <p class="intro">
+      Was möchtest du erzählen?<br>
+      Hinterlasse eine Sprachnachricht
+      für unser Kunstprojekt.<br><br>
+      Du hast bis zu fünf Minuten Zeit.
+    </p>
+  </header>
 
-  <div id="timer">00:00 / 05:00</div>
-
-  <p id="status">
-    Tippe auf das Mikrofon, um zu starten.
-  </p>
-
-  <audio id="player" controls hidden></audio>
-
-  <div>
-    <button id="reset" hidden>
-      Neu aufnehmen
+  <section class="recorder">
+    <button id="mic" type="button"
+            aria-label="Aufnahme starten">
+      🎙
     </button>
-  </div>
+
+    <div id="timer">00:00 / 05:00</div>
+
+    <div id="status" role="status">
+      Tippe auf das Mikrofon, um aufzunehmen.
+    </div>
+
+    <button id="mode" type="button">
+      Lieber gedrückt halten?
+    </button>
+
+    <audio id="player" controls hidden></audio>
+
+    <div class="actions">
+      <button id="reset" type="button" disabled>
+        Neu aufnehmen
+      </button>
+
+      <button id="send" type="button" disabled>
+        Absenden
+      </button>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Möchtest du in Kontakt bleiben?</h2>
+
+    <p class="hint">
+      Deine Kontaktdaten sind freiwillig.
+      Du kannst auch ohne sie teilnehmen.
+    </p>
+
+    <label class="check">
+      <input type="checkbox" id="addContact">
+      <span>Ich möchte Kontaktdaten hinterlassen.</span>
+    </label>
+
+    <div id="contactFields" hidden>
+
+      <div class="field">
+        <label for="name">Name (optional)</label>
+        <input id="name" maxlength="100"
+               autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="email">E-Mail-Adresse</label>
+        <input id="email" type="email"
+               maxlength="254"
+               autocomplete="email">
+      </div>
+
+      <p class="hint">
+        Bitte wähle, wofür wir dich
+        kontaktieren dürfen:
+      </p>
+
+      <label class="check">
+        <input type="checkbox" id="contactConsent">
+        <span>
+          Ich darf bei Rückfragen zu meiner
+          Aufnahme per E-Mail kontaktiert werden.
+        </span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" id="updatesConsent">
+        <span>
+          Ich möchte Informationen über
+          das Kunstprojekt und zukünftige
+          Ausstellungen erhalten.
+        </span>
+      </label>
+
+    </div>
+  </section>
+
+  <hr>
+
+  <label class="check">
+    <input type="checkbox" id="artConsent">
+    <span>
+      Ich habe die Projekt- und
+      Datenschutzinformationen gelesen
+      und stimme der dort beschriebenen
+      Speicherung und künstlerischen
+      Verwendung meiner Sprachaufnahme zu.
+    </span>
+  </label>
+
+  <p class="privacy">
+    Keine Anmeldung erforderlich.
+    Kontaktdaten sind freiwillig.<br>
+    <a href="DEIN_DATENSCHUTZ_LINK"
+       target="_blank" rel="noopener">
+      Projektinformationen und Datenschutz
+    </a>
+  </p>
+
+  <p id="message" role="status"></p>
+
 </main>
 
+<!-- Übertragung an Google Apps Script -->
+<iframe name="uploadFrame"
+        id="uploadFrame"
+        style="display:none"></iframe>
+
+<form id="uploadForm"
+      method="POST"
+      target="uploadFrame"
+      action="https://script.google.com/macros/s/AKfycbwpz5RC7C_LFiH3TJRbKnrHorQp8IevXJP3NFVF3ojr80GJNa7vK6JmptIDXv2zNKRT/exec"
+      style="display:none">
+
+  <input type="hidden" name="audioBase64">
+  <input type="hidden" name="mimeType">
+  <input type="hidden" name="duration">
+  <input type="hidden" name="name">
+  <input type="hidden" name="email">
+  <input type="hidden" name="artConsent">
+  <input type="hidden" name="contactConsent">
+  <input type="hidden" name="updatesConsent">
+</form>
+
 <script>
-  const mic = document.getElementById('mic');
-  const timer = document.getElementById('timer');
-  const statusText = document.getElementById('status');
-  const player = document.getElementById('player');
-  const reset = document.getElementById('reset');
+  const $ = id => document.getElementById(id);
 
-  let recorder;
-  let stream;
+  const MAX_SECONDS = 300;
+  const MAX_BYTES = 20 * 1024 * 1024;
+
+  let mode = 'tap';
+  let recorder = null;
+  let stream = null;
   let chunks = [];
-  let recording = false;
-  let startedAt;
-  let interval;
-  let timeout;
-  let audioUrl;
+  let audioBlob = null;
+  let audioUrl = null;
 
-  function formatTime(seconds) {
+  let recording = false;
+  let starting = false;
+  let busy = false;
+  let submitted = false;
+  let holding = false;
+  let stopAfterStart = false;
+
+  let startedAt = 0;
+  let duration = 0;
+  let ticker = null;
+  let autoStop = null;
+
+  const mic = $('mic');
+  const status = $('status');
+  const player = $('player');
+
+  function timeText(seconds) {
     const s = Math.floor(seconds);
 
-    return String(Math.floor(s / 60)).padStart(2, '0')
-      + ':' + String(s % 60).padStart(2, '0');
+    return String(Math.floor(s / 60))
+      .padStart(2, '0') + ':' +
+      String(s % 60).padStart(2, '0');
+  }
+
+  function showTime(seconds) {
+    $('timer').textContent =
+      timeText(seconds) + ' / 05:00';
+  }
+
+  function showMessage(text, type = '') {
+    $('message').textContent = text;
+    $('message').className = type;
+  }
+
+  function updateButtons() {
+    mic.disabled =
+      busy || submitted || !!audioBlob;
+
+    $('reset').disabled =
+      busy || submitted || recording ||
+      starting || !audioBlob;
+
+    $('send').disabled =
+      busy || submitted || recording ||
+      starting || !audioBlob ||
+      !$('artConsent').checked;
+
+    $('mode').disabled =
+      busy || submitted || recording ||
+      starting;
+  }
+
+  function closeStream() {
+    if (stream) {
+      stream.getTracks().forEach(
+        track => track.stop()
+      );
+      stream = null;
+    }
+  }
+
+  function clearAudio() {
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+    }
+
+    audioUrl = null;
+    audioBlob = null;
+    chunks = [];
+    duration = 0;
+
+    player.pause();
+    player.removeAttribute('src');
+    player.hidden = true;
+
+    showTime(0);
+    updateButtons();
   }
 
   async function startRecording() {
+    if (recording || starting || busy ||
+        submitted || audioBlob) return;
+
+    starting = true;
+    stopAfterStart = false;
+    updateButtons();
+    showMessage('');
+
     try {
       if (!navigator.mediaDevices?.getUserMedia ||
           !window.MediaRecorder) {
         throw new Error(
-          'Dieser Browser unterstützt keine Audioaufnahme.'
+          'Audioaufnahme wird nicht unterstützt.'
         );
       }
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
+      status.textContent =
+        'Mikrofon wird aktiviert …';
+
+      stream =
+        await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+
+      if (mode === 'hold' && !holding) {
+        closeStream();
+        status.textContent =
+          'Bitte erneut gedrückt halten.';
+        return;
+      }
+
+      const types = [
+        'audio/webm;codecs=opus',
+        'audio/mp4',
+        'audio/webm',
+        'audio/ogg;codecs=opus'
+      ];
+
+      const supported = types.find(
+        type => MediaRecorder.isTypeSupported(type)
+      );
+
+      const options = supported
+        ? { mimeType: supported,
+            audioBitsPerSecond: 64000 }
+        : { audioBitsPerSecond: 64000 };
+
+      recorder = new MediaRecorder(
+        stream, options
+      );
 
       chunks = [];
 
-      recorder = new MediaRecorder(stream);
-
       recorder.ondataavailable = event => {
-        if (event.data.size > 0) {
+        if (event.data.size) {
           chunks.push(event.data);
         }
       };
 
       recorder.onstop = () => {
-        clearInterval(interval);
-        clearTimeout(timeout);
+        clearInterval(ticker);
+        clearTimeout(autoStop);
+        closeStream();
 
-        stream.getTracks().forEach(track => track.stop());
+        recording = false;
+        mic.classList.remove('recording');
+        mic.textContent = '🎙';
 
-        const blob = new Blob(chunks, {
+        audioBlob = new Blob(chunks, {
           type: recorder.mimeType
         });
 
-        if (audioUrl) {
-          URL.revokeObjectURL(audioUrl);
+        if (!audioBlob.size ||
+            audioBlob.size > MAX_BYTES) {
+          clearAudio();
+          status.textContent =
+            'Aufnahme leer oder zu groß.';
+          return;
         }
 
-        audioUrl = URL.createObjectURL(blob);
+        audioUrl =
+          URL.createObjectURL(audioBlob);
 
         player.src = audioUrl;
         player.hidden = false;
-        reset.hidden = false;
 
-        statusText.textContent =
-          'Aufnahme fertig! Du kannst sie anhören.';
+        status.textContent =
+          'Fertig! Höre dir deine Aufnahme an.';
+
+        updateButtons();
       };
 
-      recorder.start();
+      recorder.start(1000);
 
-      startedAt = Date.now();
+      startedAt = performance.now();
       recording = true;
 
       mic.classList.add('recording');
       mic.textContent = '■';
 
-      statusText.textContent =
-        'Aufnahme läuft. Tippe zum Stoppen.';
+      status.textContent =
+        'Aufnahme läuft …';
 
-      interval = setInterval(() => {
-        const seconds = Math.min(
-          300,
-          (Date.now() - startedAt) / 1000
+      ticker = setInterval(() => {
+        duration = Math.min(
+          MAX_SECONDS,
+          (performance.now() - startedAt) / 1000
         );
 
-        timer.textContent =
-          formatTime(seconds) + ' / 05:00';
+        showTime(duration);
       }, 200);
 
-      timeout = setTimeout(stopRecording, 300000);
+      autoStop = setTimeout(
+        stopRecording,
+        MAX_SECONDS * 1000
+      );
+
+      if (stopAfterStart) {
+        stopRecording();
+      }
 
     } catch (error) {
-      statusText.textContent =
-        'Fehler: ' + error.message;
+      closeStream();
+      status.textContent =
+        'Mikrofonfehler: ' + error.message;
 
-      console.error(error);
+    } finally {
+      starting = false;
+      updateButtons();
     }
   }
 
   function stopRecording() {
-    if (!recording) return;
+    if (starting && !recording) {
+      stopAfterStart = true;
+      return;
+    }
+
+    if (!recording || !recorder) return;
+
+    duration = Math.min(
+      MAX_SECONDS,
+      (performance.now() - startedAt) / 1000
+    );
+
+    showTime(duration);
+    clearInterval(ticker);
+    clearTimeout(autoStop);
 
     recording = false;
 
-    recorder.stop();
+    if (recorder.state === 'recording') {
+      recorder.stop();
+    }
 
-    mic.classList.remove('recording');
-    mic.textContent = '🎙';
+    updateButtons();
   }
 
   mic.addEventListener('click', () => {
-    if (recording) {
+    if (mode !== 'tap' || mic.disabled) return;
+
+    if (recording || starting) {
       stopRecording();
     } else {
       startRecording();
     }
   });
 
-  reset.addEventListener('click', () => {
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
+  mic.addEventListener('pointerdown', event => {
+    if (mode !== 'hold' || mic.disabled) return;
+
+    event.preventDefault();
+    holding = true;
+
+    startRecording();
+  });
+
+  function releaseMic() {
+    if (mode !== 'hold') return;
+
+    holding = false;
+
+    if (recording || starting) {
+      stopRecording();
     }
-
-    player.pause();
-    player.removeAttribute('src');
-    player.hidden = true;
-    reset.hidden = true;
-
-    timer.textContent = '00:00 / 05:00';
-
-    statusText.textContent =
-      'Tippe auf das Mikrofon, um neu aufzunehmen.';
-  });
-</script>
-  
-<hr style="margin-top:40px">
-
-<button id="connectionTest" type="button">
-  Verbindung zu Google testen
-</button>
-
-<p id="connectionResult"></p>
-
-<iframe
-  name="googleTestFrame"
-  id="googleTestFrame"
-  style="display:none">
-</iframe>
-
-<form
-  id="googleTestForm"
-  action="https://script.google.com/macros/s/AKfycbwpz5RC7C_LFiH3TJRbKnrHorQp8IevXJP3NFVF3ojr80GJNa7vK6JmptIDXv2zNKRT/exec"
-  method="POST"
-  target="googleTestFrame"
-  style="display:none">
-
-  <input
-    type="hidden"
-    name="test"
-    value="stimmenarchiv-test">
-</form>
-
-<script>
-  const testButton =
-    document.getElementById('connectionTest');
-
-  const testResult =
-    document.getElementById('connectionResult');
-
-  const testForm =
-    document.getElementById('googleTestForm');
-
-  const testFrame =
-    document.getElementById('googleTestFrame');
-
-  let testStarted = false;
-
-  testButton.addEventListener('click', () => {
-    testStarted = true;
-
-    testResult.textContent =
-      'Testanfrage wird gesendet …';
-
-    testForm.submit();
-  });
-
-  testFrame.addEventListener('load', () => {
-    if (!testStarted) return;
-
-    testResult.textContent =
-      'Die Anfrage wurde abgeschickt. ' +
-      'Ob Google sie verarbeitet hat, ' +
-      'prüfen wir im Apps-Script-Protokoll.';
-  });
-</script>
-
-<hr style="margin:40px 0 25px">
-
-<section style="max-width:420px;margin:auto">
-  <h2>Aufnahme einsenden</h2>
-
-  <p>
-    Dies ist zunächst ein technischer Test.
-    Bitte keine persönlichen oder
-    vertraulichen Inhalte aufnehmen.
-  </p>
-
-  <label style="display:block;margin:20px 0">
-    <input type="checkbox" id="testConsent">
-    Ich stimme der Speicherung meiner
-    Testaufnahme im Projektarchiv zu.
-  </label>
-
-  <button id="uploadAudio" type="button" disabled>
-    Testaufnahme absenden
-  </button>
-
-  <p id="uploadStatus" role="status"></p>
-</section>
-
-<iframe
-  name="audioUploadFrame"
-  id="audioUploadFrame"
-  style="display:none">
-</iframe>
-
-<form
-  id="audioUploadForm"
-  action="https://script.google.com/macros/s/AKfycbwpz5RC7C_LFiH3TJRbKnrHorQp8IevXJP3NFVF3ojr80GJNa7vK6JmptIDXv2zNKRT/exec"
-  method="POST"
-  target="audioUploadFrame"
-  style="display:none">
-
-  <input type="hidden" name="audioBase64">
-  <input type="hidden" name="mimeType">
-  <input type="hidden" name="duration">
-  <input type="hidden" name="name" value="">
-  <input type="hidden" name="email" value="">
-  <input type="hidden" name="artConsent" value="true">
-  <input type="hidden" name="contactConsent" value="false">
-  <input type="hidden" name="updatesConsent" value="false">
-</form>
-
-<script>
-  const uploadButton =
-    document.getElementById('uploadAudio');
-
-  const uploadStatus =
-    document.getElementById('uploadStatus');
-
-  const testConsent =
-    document.getElementById('testConsent');
-
-  const uploadForm =
-    document.getElementById('audioUploadForm');
-
-  let uploadBusy = false;
-
-  function updateUploadButton() {
-    uploadButton.disabled =
-      uploadBusy ||
-      recording ||
-      !testConsent.checked ||
-      !recorder ||
-      !chunks.length ||
-      recorder.state !== 'inactive';
   }
 
-  testConsent.addEventListener(
-    'change',
-    updateUploadButton
+  window.addEventListener('pointerup', releaseMic);
+  window.addEventListener('pointercancel', releaseMic);
+
+  $('mode').addEventListener('click', () => {
+    mode = mode === 'tap' ? 'hold' : 'tap';
+
+    $('mode').textContent =
+      mode === 'tap'
+        ? 'Lieber gedrückt halten?'
+        : 'Lieber durch Tippen aufnehmen?';
+
+    status.textContent =
+      mode === 'tap'
+        ? 'Tippe zum Starten und Stoppen.'
+        : 'Halte das Mikrofon gedrückt.';
+  });
+
+  $('reset').addEventListener('click', () => {
+    if (busy || submitted) return;
+
+    clearAudio();
+    showMessage('');
+
+    status.textContent =
+      'Bereit für eine neue Aufnahme.';
+  });
+
+  $('addContact').addEventListener(
+    'change', () => {
+      const enabled = $('addContact').checked;
+
+      $('contactFields').hidden = !enabled;
+
+      if (!enabled) {
+        $('name').value = '';
+        $('email').value = '';
+        $('contactConsent').checked = false;
+        $('updatesConsent').checked = false;
+      }
+    }
   );
 
-  // Aufnahmestatus regelmäßig prüfen
-  setInterval(updateUploadButton, 300);
+  $('artConsent').addEventListener(
+    'change', updateButtons
+  );
 
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
@@ -400,80 +680,123 @@
     });
   }
 
-  uploadButton.addEventListener(
-    'click',
-    async () => {
-      if (uploadButton.disabled) return;
+  $('send').addEventListener('click', async () => {
+    if (busy || submitted || !audioBlob ||
+        !$('artConsent').checked) return;
 
-      uploadBusy = true;
-      updateUploadButton();
+    const hasContact = $('addContact').checked;
 
-      try {
-        const blob = new Blob(chunks, {
-          type: recorder.mimeType
-        });
+    const wantsQuestions =
+      hasContact && $('contactConsent').checked;
 
-        // Nur kleine Dateien für diesen Test
-        if (blob.size > 1024 * 1024) {
-          throw new Error(
-            'Für diesen Test bitte nur ' +
-            'eine kurze Aufnahme machen.'
-          );
-        }
+    const wantsUpdates =
+      hasContact && $('updatesConsent').checked;
 
-        const mimeType =
-          blob.type.split(';')[0];
+    const email = hasContact
+      ? $('email').value.trim()
+      : '';
 
-        if (![
-          'audio/webm',
-          'audio/mp4',
-          'audio/ogg'
-        ].includes(mimeType)) {
-          throw new Error(
-            'Audioformat nicht unterstützt: ' +
-            mimeType
-          );
-        }
+    const name = hasContact
+      ? $('name').value.trim()
+      : '';
 
-        const base64 =
-          await blobToBase64(blob);
-
-        const durationSeconds =
-          Math.min(
-            300,
-            (Date.now() - startedAt) / 1000
-          );
-
-        uploadForm.elements[
-          'audioBase64'
-        ].value = base64;
-
-        uploadForm.elements[
-          'mimeType'
-        ].value = mimeType;
-
-        uploadForm.elements[
-          'duration'
-        ].value = String(durationSeconds);
-
-        uploadStatus.textContent =
-          'Anfrage wird an Google gesendet. ' +
-          'Bitte anschließend Drive und ' +
-          'Sheets kontrollieren.';
-
-        uploadForm.submit();
-
-      } catch (error) {
-        uploadStatus.textContent =
-          'Fehler: ' + error.message;
-
-      } finally {
-        uploadBusy = false;
-        updateUploadButton();
-      }
+    if ((wantsQuestions || wantsUpdates) &&
+        !email) {
+      showMessage(
+        'Bitte gib für die Kontaktaufnahme ' +
+        'deine E-Mail-Adresse ein.',
+        'error'
+      );
+      return;
     }
-  );
-</script>
 
+    if (email &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showMessage(
+        'Bitte überprüfe deine E-Mail-Adresse.',
+        'error'
+      );
+      return;
+    }
+
+    const mimeType =
+      audioBlob.type.split(';')[0];
+
+    if (![
+      'audio/webm',
+      'audio/mp4',
+      'audio/ogg'
+    ].includes(mimeType)) {
+      showMessage(
+        'Dieses Audioformat wird noch ' +
+        'nicht unterstützt: ' + mimeType,
+        'error'
+      );
+      return;
+    }
+
+    busy = true;
+    updateButtons();
+
+    showMessage('Aufnahme wird vorbereitet …');
+
+    try {
+      const base64 =
+        await blobToBase64(audioBlob);
+
+      const form = $('uploadForm');
+
+      form.elements['audioBase64'].value =
+        base64;
+
+      form.elements['mimeType'].value =
+        mimeType;
+
+      form.elements['duration'].value =
+        String(duration);
+
+      form.elements['name'].value = name;
+      form.elements['email'].value = email;
+
+      form.elements['artConsent'].value =
+        'true';
+
+      form.elements['contactConsent'].value =
+        String(wantsQuestions);
+
+      form.elements['updatesConsent'].value =
+        String(wantsUpdates);
+
+      form.submit();
+
+      // Keine erneute Einsendung erlauben,
+      // solange der Status unbekannt ist.
+      submitted = true;
+
+      showMessage(
+        'Die Aufnahme wurde an Google ' +
+        'abgeschickt. Eine automatische ' +
+        'Speicherbestätigung ist in dieser ' +
+        'Testversion noch nicht verfügbar.',
+        'notice'
+      );
+
+      status.textContent =
+        'Übertragung gestartet.';
+
+    } catch (error) {
+      showMessage(
+        'Fehler: ' + error.message,
+        'error'
+      );
+
+    } finally {
+      busy = false;
+      updateButtons();
+    }
+  });
+
+  updateButtons();
+</script>
 </body>
 </html>
