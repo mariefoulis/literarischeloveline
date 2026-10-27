@@ -671,6 +671,16 @@
           'Fertig! Höre dir deine Aufnahme an.';
 
         updateButtons();
+
+        if (window.innerWidth <= 600) {
+  setTimeout(() => {
+    document.querySelector('.recorder').scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }, 150);
+}
+      
       };
 
       recorder.start(1000);
