@@ -68,6 +68,9 @@
     .intro { margin-bottom: 40px; }
 
     #mic {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 116px;
       height: 116px;
       border: 0;
@@ -475,6 +478,7 @@
   let autoStop = null;
 
   const mic = $('mic');
+  const micSymbol = mic.innerHTML;
   const status = $('status');
   const player = $('player');
 
@@ -597,7 +601,7 @@
 
         recording = false;
         mic.classList.remove('recording');
-        mic.textContent = '🎙';
+        mic.innerHTML = micSymbol;
 
         audioBlob = new Blob(chunks, {
           type: recorder.mimeType
