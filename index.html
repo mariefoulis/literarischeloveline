@@ -961,19 +961,25 @@
 $('saveContact').addEventListener('click', () => {
   const email = $('email').value.trim();
 
-  if (email &&
+  if (!email ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showEmailError('Bitte gib eine gültige E-Mail-Adresse ein.');
+    showEmailError(
+      'Bitte gib eine gültige E-Mail-Adresse ein.'
+    );
     return;
   }
 
-  if (($('contactConsent').checked ||
-       $('updatesConsent').checked) && !email) {
-    showEmailError('Bitte gib deine E-Mail-Adresse ein.');
+  if (!$('contactConsent').checked &&
+      !$('updatesConsent').checked) {
+    showMessage(
+      'Bitte wähle mindestens einen Grund für die Kontaktaufnahme.',
+      'error'
+    );
     return;
   }
 
   clearEmailError();
+  showMessage('');
 
   $('contactLabel').textContent =
     'Du hast deine Kontaktdaten hinterlassen.';
