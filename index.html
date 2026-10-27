@@ -779,6 +779,15 @@
       const enabled = $('addContact').checked;
 
       $('contactFields').hidden = !enabled;
+
+if (enabled && window.innerWidth <= 600) {
+  setTimeout(() => {
+    $('saveContact').scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    });
+  }, 150);
+}
       
       if (!enabled) {
         $('name').value = '';
