@@ -782,9 +782,14 @@
 
 if (enabled && window.innerWidth <= 600) {
   setTimeout(() => {
-    $('saveContact').scrollIntoView({
-      behavior: 'smooth',
-      block: 'end'
+    const button = $('saveContact');
+
+    const buttonBottom =
+      button.getBoundingClientRect().bottom + window.scrollY;
+
+    window.scrollTo({
+      top: buttonBottom - window.innerHeight + 30,
+      behavior: 'smooth'
     });
   }, 150);
 }
