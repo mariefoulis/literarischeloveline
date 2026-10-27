@@ -674,9 +674,14 @@
 
         if (window.innerWidth <= 600) {
   setTimeout(() => {
-    document.querySelector('.recorder').scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
+    const heading = document.querySelector('.recorder').previousElementSibling;
+
+    const headingTop =
+      heading.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: headingTop - 10,
+      behavior: 'smooth'
     });
   }, 150);
 }
