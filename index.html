@@ -385,7 +385,7 @@
     <section>
       <label class="check">
         <input type="checkbox" id="addContact">
-        <span>Ich möchte Kontaktdaten hinterlassen.</span>
+<span id="contactLabel">Ich möchte Kontaktdaten hinterlassen.</span>
       </label>
 
       <div id="contactFields" hidden>
@@ -429,6 +429,10 @@
           </span>
         </label>
 
+<button type="button" id="saveContact">
+  Kontaktdaten speichern
+</button>
+        
       </div>
     </section>
   </div>
@@ -954,6 +958,34 @@
     }
   });
 
+$('saveContact').addEventListener('click', () => {
+  const email = $('email').value.trim();
+
+  if (email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showEmailError('Bitte gib eine gültige E-Mail-Adresse ein.');
+    return;
+  }
+
+  if (($('contactConsent').checked ||
+       $('updatesConsent').checked) && !email) {
+    showEmailError('Bitte gib deine E-Mail-Adresse ein.');
+    return;
+  }
+
+  clearEmailError();
+
+  $('contactLabel').textContent =
+    'Du hast deine Kontaktdaten hinterlassen.';
+
+  $('contactFields').hidden = true;
+
+  document.querySelector('.recorder').scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+});
+  
   updateButtons();
 </script>
 
