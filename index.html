@@ -780,6 +780,15 @@
 
       $('contactFields').hidden = !enabled;
 
+if ($('addContact').checked && window.innerWidth <= 600) {
+  setTimeout(() => {
+    $('saveContact').scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    });
+  }, 150);
+}
+      
       if (!enabled) {
         $('name').value = '';
         $('email').value = '';
@@ -1019,11 +1028,17 @@ $('saveContact').addEventListener('click', () => {
 
   $('contactFields').hidden = true;
 
-  document.querySelector('.recorder').scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
+  if (window.innerWidth <= 600) {
+  const heading = document.querySelector('.recorder').previousElementSibling;
+
+  const headingTop =
+    heading.getBoundingClientRect().top + window.scrollY;
+
+  window.scrollTo({
+    top: headingTop - 10,
+    behavior: 'smooth'
   });
-});
+}
   
   updateButtons();
 </script>
