@@ -1021,14 +1021,17 @@ $('saveContact').addEventListener('click', () => {
     return;
   }
 
-  if (!$('contactConsent').checked &&
-      !$('updatesConsent').checked) {
-    showMessage(
-      'Bitte wähle mindestens einen Grund für die Kontaktaufnahme aus.',
-      'error'
-    );
-    return;
-  }
+if (
+  !$('nameConsent').checked &&
+  !$('contactConsent').checked &&
+  !$('updatesConsent').checked
+) {
+  showMessage(
+    'Bitte wähle mindestens einen Verwendungzweck deiner Kontaktdaten aus.',
+    'error'
+  );
+  return;
+}
 
   clearEmailError();
   showMessage('');
