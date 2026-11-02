@@ -892,13 +892,15 @@ if (enabled && window.innerWidth <= 600) {
       return;
     }
 
-    if (email &&
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showEmailError(
-        'Bitte gib eine gültige E-Mail-Adresse ein.'
-      );
-      return;
-    }
+    if (
+  ($('contactConsent').checked || $('updatesConsent').checked) &&
+  (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+) {
+  showEmailError(
+    'Bitte gib eine gültige E-Mail-Adresse ein.'
+  );
+  return;
+}
 
     clearEmailError();
 
