@@ -1041,6 +1041,16 @@ if (
   return;
 }
 
+
+if ($('nameConsent').checked && !$('name').value.trim()) {
+  showMessage(
+    'Bitte gib für die Namensnennung deinen Namen ein.',
+    'error'
+  );
+  return;
+}
+
+  
   clearEmailError();
   showMessage('');
 
