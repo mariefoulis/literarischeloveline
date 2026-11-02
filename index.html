@@ -1017,8 +1017,10 @@ if (enabled && window.innerWidth <= 600) {
 $('saveContact').addEventListener('click', () => {
   const email = $('email').value.trim();
 
-  if (!email ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+if (
+  ($('contactConsent').checked || $('updatesConsent').checked) &&
+  (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+) {
     showEmailError(
       'Bitte gib eine gültige E-Mail-Adresse ein.'
     );
